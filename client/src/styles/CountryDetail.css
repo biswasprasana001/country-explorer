@@ -1,0 +1,120 @@
+.first-color {
+  background: #233142;
+}
+
+.second-color {
+  background: #455d7a;
+}
+
+.third-color {
+  background: #f95959;
+}
+
+.fourth-color {
+  background: #e3e3e3;
+}
+
+.country-detail {
+  border: 2px solid red;
+  height: 100vh;
+}
+
+.back-link {
+  border: 2px solid red;
+  text-decoration: none;
+}
+
+.back-link-btn {
+  border: 2px solid blue;
+  display: block;
+  margin: auto;
+  margin-top: 10px;
+  text-align: center;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #f95959;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: #f00000;
+  }
+  &:active {
+    background-color: #f95959;
+  }
+}
+
+.country-info-container {
+  border: 2px solid green;
+  margin: auto;
+  margin-top: 20px;
+  width: 50%;
+}
+
+.country-name {
+  border: 2px solid blue;
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #455d7a;
+}
+
+.country-info {
+  border: 2px solid green;
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.country-flag-container {
+  border: 2px solid blue;
+  width: 50%;
+}
+
+.country-flag {
+  border: 2px solid green;
+  width: 100%;
+  height: auto;
+}
+
+.country-coat-of-arms-container {
+  border: 2px solid blue;
+}
+
+.country-coat-of-arms {
+  border: 2px solid green;
+}
+
+.country-details {
+  border: 2px solid blue;
+  margin-left: 20px;
+  width: 25%;
+  font-size: 20px;
+  color: #233142;
+  line-height: 1.5;
+  text-align: center;
+  padding: 10px;
+}
+
+.map-link {
+  border: 2px solid red;
+  display: block;
+  margin: auto;
+  margin-top: 20px;
+  text-align: center;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #f95959;
+  color: #fff;
+  cursor: pointer;
+  font-size: medium;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: #f00000;
+  }
+  &:active {
+    background-color: #f95959;
+  }
+}

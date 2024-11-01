@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import CountryCard from "./CountryCard";
-// import "./CountryCard.css";
+import "../styles/CountryList.css";
 
 const CountryList = () => {
   const [countries, setCountries] = useState([]); // All countries data
@@ -70,17 +70,19 @@ const CountryList = () => {
   return (
     <div className="country-list">
       <header className="country-list-header">
-        <h1>Countries of the World</h1>
-        <button onClick={toggleViewMode}>
+        <h1 className="country-list-title">Countries of the World</h1>
+        <button onClick={toggleViewMode} className="view-mode-button">
           Toggle to {viewMode === "grid" ? "List" : "Grid"} View
         </button>
       </header>
 
       <div className={viewMode}>
         {displayedCountries.map((country) => (
-          <Link to={`/country/${country.cca3}`} key={country.cca3}>
-            <CountryCard country={country} viewMode={viewMode} />
-          </Link>
+          <div className="country-container">
+            <Link to={`/country/${country.cca3}`} key={country.cca3}>
+              <CountryCard country={country} viewMode={viewMode} />
+            </Link>
+          </div>
         ))}
       </div>
 
