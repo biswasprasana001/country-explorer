@@ -10,6 +10,10 @@ const CountryList = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState("grid"); // 'grid' or 'list'
   const [page, setPage] = useState(1); // Pagination page
+  const [filterRegion, setFilterRegion] = useState("");
+  const [sortOption, setSortOption] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchType, setSearchType] = useState("name");
   const ITEMS_PER_PAGE = 10; // Number of items per page
 
   const loader = useRef(null);
@@ -32,6 +36,60 @@ const CountryList = () => {
 
     fetchCountries();
   }, []);
+
+  // Apply filters and sorting before displaying countries
+  useEffect(() => {
+    let filteredCountries = [...countries];
+
+    // Apply region filter
+    if (filterRegion) {
+      filteredCountries = filteredCountries.filter(
+        (country) => country.region === filterRegion
+      );
+    }
+
+    // Apply sorting
+    if (sortOption === "populationAsc") {
+      filteredCountries.sort((a, b) => a.population - b.population);
+    } else if (sortOption === "populationDesc") {
+      filteredCountries.sort((a, b) => b.population - a.population);
+    } else if (sortOption === "areaAsc") {
+      filteredCountries.sort((a, b) => a.area - b.area);
+    } else if (sortOption === "areaDesc") {
+      filteredCountries.sort((a, b) => b.area - a.area);
+    }
+
+    // Paginate filtered and sorted results
+    setDisplayedCountries(filteredCountries.slice(0, page * ITEMS_PER_PAGE));
+  }, [filterRegion, sortOption, page, countries]);
+
+  // Search function
+  const handleSearch = async () => {
+    setIsLoading(true);
+    let url = "";
+
+    if (searchType === "name") {
+      url = `https://restcountries.com/v3.1/name/${searchQuery}`;
+    } else if (searchType === "capital") {
+      url = `https://restcountries.com/v3.1/capital/${searchQuery}`;
+    } else if (searchType === "language") {
+      url = `https://restcountries.com/v3.1/lang/${searchQuery}`;
+    }
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("No results found");
+      const data = await response.json();
+      setCountries(data);
+      setDisplayedCountries(data.slice(0, ITEMS_PER_PAGE));
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+      setCountries([]);
+      setDisplayedCountries([]); // Clear results on error
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Load more countries as the page number increases
   useEffect(() => {
@@ -67,6 +125,20 @@ const CountryList = () => {
     setViewMode(viewMode === "grid" ? "list" : "grid");
   };
 
+  const handleFilterChange = (e) => {
+    setFilterRegion(e.target.value);
+    setPage(1); // Reset to first page after filter change
+  };
+
+  const handleSortChange = (e) => {
+    setSortOption(e.target.value);
+    setPage(1); // Reset to first page after sort change
+  };
+
+  const handleSearchTypeChange = (e) => {
+    setSearchType(e.target.value);
+  };
+
   return (
     <div className="country-list">
       <header className="country-list-header">
@@ -74,12 +146,49 @@ const CountryList = () => {
         <button onClick={toggleViewMode} className="view-mode-button">
           Toggle to {viewMode === "grid" ? "List" : "Grid"} View
         </button>
+        <div className="controls">
+          {/* Search Input */}
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+            />
+
+            <select onChange={handleSearchTypeChange} value={searchType} className="search-type-select">
+              <option value="name">Country Name</option>
+              <option value="capital">Capital</option>
+              <option value="language">Language</option>
+            </select>
+            <button onClick={handleSearch} className="search-button">Search</button>
+          </div>
+          <div className="filter-container">
+            <select onChange={handleFilterChange} value={filterRegion} className="filter-select">
+              <option value="">All Regions</option>
+              <option value="Africa">Africa</option>
+              <option value="Americas">Americas</option>
+              <option value="Asia">Asia</option>
+              <option value="Europe">Europe</option>
+              <option value="Oceania">Oceania</option>
+            </select>
+
+            <select onChange={handleSortChange} value={sortOption} className="sort-select">
+              <option value="">Sort by</option>
+              <option value="populationAsc">Population: Low to High</option>
+              <option value="populationDesc">Population: High to Low</option>
+              <option value="areaAsc">Area: Small to Large</option>
+              <option value="areaDesc">Area: Large to Small</option>
+            </select>
+          </div>
+        </div>
       </header>
 
       <div className={viewMode}>
         {displayedCountries.map((country) => (
           <div className="country-container">
-            <Link to={`/country/${country.cca3}`} key={country.cca3}>
+            <Link to={`/country/${country.cca3}`}>
               <CountryCard country={country} viewMode={viewMode} />
             </Link>
           </div>
