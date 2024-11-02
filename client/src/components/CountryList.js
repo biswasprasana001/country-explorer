@@ -8,13 +8,34 @@ const CountryList = () => {
   const [countries, setCountries] = useState([]); // All countries data
   const [displayedCountries, setDisplayedCountries] = useState([]); // Countries displayed
   const [isLoading, setIsLoading] = useState(true);
-  const [viewMode, setViewMode] = useState("grid"); // 'grid' or 'list'
+  const [viewMode, setViewMode] = useState("list"); // 'grid' or 'list'
   const [page, setPage] = useState(1); // Pagination page
   const [filterRegion, setFilterRegion] = useState("");
   const [sortOption, setSortOption] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchType, setSearchType] = useState("name");
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 750);
   const ITEMS_PER_PAGE = 10; // Number of items per page
+
+  useEffect(() => {
+    const handleResize = () => {
+      const isSmall = window.innerWidth < 750;
+      setIsSmallScreen(isSmall);
+
+      if (isSmall) {
+        setViewMode("grid"); // Set to grid on small screens
+      }
+    };
+
+    // Initial check for screen size
+    handleResize();
+
+    // Add resize listener
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup event listener on component unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const loader = useRef(null);
 
@@ -143,9 +164,12 @@ const CountryList = () => {
     <div className="country-list">
       <header className="country-list-header">
         <h1 className="country-list-title">Countries of the World</h1>
-        <button onClick={toggleViewMode} className="view-mode-button">
-          Toggle to {viewMode === "grid" ? "List" : "Grid"} View
-        </button>
+        {/* Show toggle button only on larger screens */}
+        {!isSmallScreen && (
+          <button onClick={toggleViewMode} className="view-mode-button">
+            Toggle to {viewMode === "grid" ? "List" : "Grid"} View
+          </button>
+        )}
         <div className="controls">
           {/* Search Input */}
           <div className="search-container">
@@ -157,15 +181,25 @@ const CountryList = () => {
               className="search-input"
             />
 
-            <select onChange={handleSearchTypeChange} value={searchType} className="search-type-select">
-              <option value="name">Country Name</option>
+            <select
+              onChange={handleSearchTypeChange}
+              value={searchType}
+              className="search-type-select"
+            >
+              <option value="name">Country</option>
               <option value="capital">Capital</option>
               <option value="language">Language</option>
             </select>
-            <button onClick={handleSearch} className="search-button">Search</button>
+            <button onClick={handleSearch} className="search-button">
+              Search
+            </button>
           </div>
           <div className="filter-container">
-            <select onChange={handleFilterChange} value={filterRegion} className="filter-select">
+            <select
+              onChange={handleFilterChange}
+              value={filterRegion}
+              className="filter-select"
+            >
               <option value="">All Regions</option>
               <option value="Africa">Africa</option>
               <option value="Americas">Americas</option>
@@ -174,7 +208,11 @@ const CountryList = () => {
               <option value="Oceania">Oceania</option>
             </select>
 
-            <select onChange={handleSortChange} value={sortOption} className="sort-select">
+            <select
+              onChange={handleSortChange}
+              value={sortOption}
+              className="sort-select"
+            >
               <option value="">Sort by</option>
               <option value="populationAsc">Population: Low to High</option>
               <option value="populationDesc">Population: High to Low</option>

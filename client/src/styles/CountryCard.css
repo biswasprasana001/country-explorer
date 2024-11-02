@@ -23,7 +23,7 @@ a {
 
   .country-container {
     border: 2px solid red;
-    width: 50%;
+    max-width: 750px;
     margin: auto;
     margin-bottom: 10px;
   }
@@ -46,8 +46,8 @@ a {
 
   .country-card-flag {
     border: 2px solid green;
-    width: 35%;
-    height: 150px;
+    width: 50%;
+    height: auto;
     display: flex;
     justify-content: center;
   }
@@ -55,12 +55,11 @@ a {
   .country-card-flag img {
     border: 2px solid blue;
     width: 100%;
-    height: auto;
   }
 
   .country-card-details {
     border: 2px solid red;
-    width: 65%;
+    width: 55%;
     display: flex;
     flex-direction: column;
     /* justify-content: center; */
@@ -70,7 +69,7 @@ a {
   .country-card-name,
   .country-card-capital,
   .country-card-currency {
-    width: 50%;
+    width: 75%;
     margin-left: 20px;
     padding: 7.5px;
     text-align: left;
@@ -94,6 +93,12 @@ a {
     border: 2px solid red;
     font-family: "Courier New", Courier, monospace;
     color: #233142;
+  }
+
+  @media screen and (max-width: 825px) {
+    .country-container {
+      margin: 25px;
+    }
   }
 }
 
@@ -143,11 +148,6 @@ a {
     margin-top: 20px;
   }
 
-  .country-card-name,
-  .country-card-capital,
-  .country-card-currency {
-  }
-
   .country-card-name {
     border: 2px solid red;
     font-family: "Courier New", Courier, monospace;
@@ -166,5 +166,16 @@ a {
     border: 2px solid red;
     font-family: "Courier New", Courier, monospace;
     color: #233142;
+  }
+
+  @media screen and (max-width: 435px) {
+    .country-card-flag {
+      width: auto;
+      height: 35vw;
+    }
+
+    .country-card-flag img {
+      width: 100%;
+    }
   }
 }

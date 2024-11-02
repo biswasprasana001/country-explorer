@@ -60,7 +60,7 @@
   &:active {
     background-color: #f95959;
   }
-  font-size: 16px;  
+  font-size: 16px;
   font-weight: bold;
 }
 
@@ -73,7 +73,7 @@
   margin: 20px;
 }
 
-.search-container  {
+.search-container {
   border: 2px solid blue;
   display: flex;
   justify-content: center;
@@ -98,7 +98,9 @@
   font-size: 16px;
 }
 
-.search-type-select, .filter-select, .sort-select {
+.search-type-select,
+.filter-select,
+.sort-select {
   border: 2px solid blue;
   border-radius: 5px;
   padding: 10px;
@@ -119,5 +121,54 @@
   }
   &:active {
     background-color: #f95959;
+  }
+}
+
+@media screen and (max-width: 1770px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (max-width: 1310px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .controls {
+    flex-direction: column;
+  }
+
+  .search-container {
+    margin: 0;
+  }
+
+  .filter-container {
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .search-input,
+  .search-type-select,
+  .search-button,
+  .filter-select,
+  .sort-select {
+    width: 100%;
+    font-size: 3vw;
+  }
+
+  .search-type-select option,
+  .filter-select option,
+  .sort-select option {
+    font-size: 2.5vw;
   }
 }
