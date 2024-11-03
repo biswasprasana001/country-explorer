@@ -1,188 +1,154 @@
-// client\src\components\CountryList.js
-import React, { useState, useEffect, useRef, useCallback } from "react";
+// client/src/components/CountryList.js
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import { Link } from "react-router-dom";
+import { ClipLoader } from "react-spinners"; // Import the spinner
 import CountryCard from "./CountryCard";
 import "../styles/CountryList.css";
 
+const ITEMS_PER_PAGE_LARGE = 10;
+const ITEMS_PER_PAGE_SMALL = 5;
+
 const CountryList = () => {
-  const [countries, setCountries] = useState([]); // All countries data
-  const [displayedCountries, setDisplayedCountries] = useState([]); // Countries displayed
-  const [isLoading, setIsLoading] = useState(true);
-  const [viewMode, setViewMode] = useState("list"); // 'grid' or 'list'
-  const [page, setPage] = useState(1); // Pagination page
+  const [countries, setCountries] = useState([]);
+  const [displayedCountries, setDisplayedCountries] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPaginating, setIsPaginating] = useState(false);
+  const [viewMode, setViewMode] = useState("grid");
+  const [page, setPage] = useState(1);
   const [filterRegion, setFilterRegion] = useState("");
   const [sortOption, setSortOption] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchType, setSearchType] = useState("name");
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 750);
-  const ITEMS_PER_PAGE = 10; // Number of items per page
+
+  const ITEMS_PER_PAGE = isSmallScreen
+    ? ITEMS_PER_PAGE_SMALL
+    : ITEMS_PER_PAGE_LARGE;
+  const loaderRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => {
-      const isSmall = window.innerWidth < 750;
-      setIsSmallScreen(isSmall);
-
-      if (isSmall) {
-        setViewMode("grid"); // Set to grid on small screens
-      }
+      const smallScreen = window.innerWidth < 750;
+      setIsSmallScreen(smallScreen);
+      setViewMode(smallScreen ? "grid" : "list");
     };
-
-    // Initial check for screen size
-    handleResize();
-
-    // Add resize listener
     window.addEventListener("resize", handleResize);
-
-    // Cleanup event listener on component unmount
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const loader = useRef(null);
-
-  // Fetch all countries initially
-  useEffect(() => {
-    const fetchCountries = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch("https://restcountries.com/v3.1/all");
-        const data = await response.json();
-        setCountries(data);
-        setDisplayedCountries(data.slice(0, ITEMS_PER_PAGE));
-      } catch (error) {
-        console.error("Error fetching countries data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchCountries();
-  }, []);
-
-  // Apply filters and sorting before displaying countries
-  useEffect(() => {
-    let filteredCountries = [...countries];
-
-    // Apply region filter
-    if (filterRegion) {
-      filteredCountries = filteredCountries.filter(
-        (country) => country.region === filterRegion
-      );
-    }
-
-    // Apply sorting
-    if (sortOption === "populationAsc") {
-      filteredCountries.sort((a, b) => a.population - b.population);
-    } else if (sortOption === "populationDesc") {
-      filteredCountries.sort((a, b) => b.population - a.population);
-    } else if (sortOption === "areaAsc") {
-      filteredCountries.sort((a, b) => a.area - b.area);
-    } else if (sortOption === "areaDesc") {
-      filteredCountries.sort((a, b) => b.area - a.area);
-    }
-
-    // Paginate filtered and sorted results
-    setDisplayedCountries(filteredCountries.slice(0, page * ITEMS_PER_PAGE));
-  }, [filterRegion, sortOption, page, countries]);
-
-  // Search function
-  const handleSearch = async () => {
+  const fetchCountries = useCallback(async (url) => {
     setIsLoading(true);
-    let url = "";
-
-    if (searchType === "name") {
-      url = `https://restcountries.com/v3.1/name/${searchQuery}`;
-    } else if (searchType === "capital") {
-      url = `https://restcountries.com/v3.1/capital/${searchQuery}`;
-    } else if (searchType === "language") {
-      url = `https://restcountries.com/v3.1/lang/${searchQuery}`;
-    }
-
     try {
       const response = await fetch(url);
-      if (!response.ok) throw new Error("No results found");
-      const data = await response.json();
-      setCountries(data);
-      setDisplayedCountries(data.slice(0, ITEMS_PER_PAGE));
+      if (!response.ok) throw new Error("Failed to fetch countries");
+      return await response.json();
     } catch (error) {
-      console.error("Error fetching search results:", error);
+      console.error(error.message);
+      setDisplayedCountries([]);
       setCountries([]);
-      setDisplayedCountries([]); // Clear results on error
     } finally {
       setIsLoading(false);
     }
-  };
-
-  // Load more countries as the page number increases
-  useEffect(() => {
-    if (page > 1) {
-      const nextCountries = countries.slice(
-        (page - 1) * ITEMS_PER_PAGE,
-        page * ITEMS_PER_PAGE
-      );
-      setDisplayedCountries((prev) => [...prev, ...nextCountries]);
-    }
-  }, [page, countries]);
-
-  // Infinite Scroll Observer
-  const handleObserver = useCallback((entries) => {
-    const target = entries[0];
-    if (target.isIntersecting) {
-      setPage((prev) => prev + 1);
-    }
   }, []);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(handleObserver, {
-      root: null,
-      rootMargin: "20px",
-      threshold: 0.1,
+    fetchCountries("https://restcountries.com/v3.1/all").then((data) => {
+      setCountries(data || []);
+      setDisplayedCountries((data || []).slice(0, ITEMS_PER_PAGE));
     });
+  }, [fetchCountries, ITEMS_PER_PAGE]);
 
-    if (loader.current) observer.observe(loader.current);
+  const filteredCountries = useMemo(() => {
+    let result = [...countries];
+    if (filterRegion)
+      result = result.filter((country) => country.region === filterRegion);
+    if (sortOption) {
+      result = result.sort((a, b) => {
+        if (sortOption.includes("population")) {
+          return sortOption === "populationAsc"
+            ? a.population - b.population
+            : b.population - a.population;
+        }
+        if (sortOption.includes("area")) {
+          return sortOption === "areaAsc" ? a.area - b.area : b.area - a.area;
+        }
+        return 0;
+      });
+    }
+    return result;
+  }, [countries, filterRegion, sortOption]);
+
+  useEffect(() => {
+    setDisplayedCountries(filteredCountries.slice(0, page * ITEMS_PER_PAGE));
+  }, [filteredCountries, page, ITEMS_PER_PAGE]);
+
+  const handleSearch = useCallback(async () => {
+    const endpointMap = {
+      name: "name",
+      capital: "capital",
+      language: "lang",
+    };
+    const endpoint = endpointMap[searchType];
+    const url = `https://restcountries.com/v3.1/${endpoint}/${searchQuery}`;
+    const data = await fetchCountries(url);
+    if (data) {
+      setCountries(data);
+      setDisplayedCountries(data.slice(0, ITEMS_PER_PAGE));
+      setPage(1);
+    }
+  }, [searchType, searchQuery, fetchCountries, ITEMS_PER_PAGE]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          !isLoading &&
+          page * ITEMS_PER_PAGE < filteredCountries.length
+        ) {
+          setIsPaginating(true);
+          setPage((prev) => prev + 1);
+          setIsPaginating(false);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (loaderRef.current) observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [handleObserver]);
-
-  const toggleViewMode = () => {
-    setViewMode(viewMode === "grid" ? "list" : "grid");
-  };
-
-  const handleFilterChange = (e) => {
-    setFilterRegion(e.target.value);
-    setPage(1); // Reset to first page after filter change
-  };
-
-  const handleSortChange = (e) => {
-    setSortOption(e.target.value);
-    setPage(1); // Reset to first page after sort change
-  };
-
-  const handleSearchTypeChange = (e) => {
-    setSearchType(e.target.value);
-  };
+  }, [page, filteredCountries, ITEMS_PER_PAGE, isLoading]);
 
   return (
     <div className="country-list">
       <header className="country-list-header">
         <h1 className="country-list-title">Countries of the World</h1>
-        {/* Show toggle button only on larger screens */}
         {!isSmallScreen && (
-          <button onClick={toggleViewMode} className="view-mode-button">
+          <button
+            onClick={() =>
+              setViewMode((prev) => (prev === "grid" ? "list" : "grid"))
+            }
+            className="view-mode-button"
+          >
             Toggle to {viewMode === "grid" ? "List" : "Grid"} View
           </button>
         )}
         <div className="controls">
-          {/* Search Input */}
           <div className="search-container">
             <input
               type="text"
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               className="search-input"
             />
-
             <select
-              onChange={handleSearchTypeChange}
+              onChange={(e) => setSearchType(e.target.value)}
               value={searchType}
               className="search-type-select"
             >
@@ -196,7 +162,7 @@ const CountryList = () => {
           </div>
           <div className="filter-container">
             <select
-              onChange={handleFilterChange}
+              onChange={(e) => setFilterRegion(e.target.value)}
               value={filterRegion}
               className="filter-select"
             >
@@ -207,9 +173,8 @@ const CountryList = () => {
               <option value="Europe">Europe</option>
               <option value="Oceania">Oceania</option>
             </select>
-
             <select
-              onChange={handleSortChange}
+              onChange={(e) => setSortOption(e.target.value)}
               value={sortOption}
               className="sort-select"
             >
@@ -222,22 +187,22 @@ const CountryList = () => {
           </div>
         </div>
       </header>
-
       <div className={viewMode}>
         {displayedCountries.map((country) => (
-          <div className="country-container">
+          <div key={country.cca3} className="country-container">
             <Link to={`/country/${country.cca3}`}>
               <CountryCard country={country} viewMode={viewMode} />
             </Link>
           </div>
         ))}
       </div>
-
-      {isLoading && <div className="loading-spinner">Loading...</div>}
-
-      {/* Loader div to trigger infinite scroll */}
-      <div ref={loader} className="loading-spinner">
-        {isLoading && <div>Loading more countries...</div>}
+      {isLoading && (
+        <div className="loading-spinner">
+          <ClipLoader color="#007bff" size={50} />
+        </div>
+      )}
+      <div ref={loaderRef} className="loading-spinner">
+        {isPaginating && <ClipLoader color="#007bff" size={30} />}
       </div>
     </div>
   );

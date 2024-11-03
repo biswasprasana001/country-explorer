@@ -18,6 +18,11 @@ a {
   text-decoration: none;
 }
 
+.country-card {
+  background-color: #fff;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1)
+}
+
 .list {
   border: 2px solid red;
 
@@ -110,7 +115,7 @@ a {
     width: 75%;
     margin: auto;
     margin-bottom: 10px;
-    height: 325px;
+    /* height: 325px; */
   }
 
   .country-card {

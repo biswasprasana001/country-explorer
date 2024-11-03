@@ -1,7 +1,8 @@
-// client\src\components\CountryDetail.js
+// client/src/components/CountryDetail.js
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import "../styles/CountryDetail.css";
+import { ClipLoader } from "react-spinners"; // Optional: for loading spinner
 
 const CountryDetail = () => {
   const { countryCode } = useParams();
@@ -28,7 +29,11 @@ const CountryDetail = () => {
   }, [countryCode]);
 
   if (isLoading || !country) {
-    return <div className="loading-spinner">Loading country details...</div>;
+    return (
+      <div className="loading-spinner">
+        <ClipLoader color="#007bff" size={50} /> {/* Optional spinner */}
+      </div>
+    );
   }
 
   const {
@@ -91,7 +96,20 @@ const CountryDetail = () => {
               {languages ? Object.values(languages).join(", ") : "N/A"}
             </p>
             <p>
-              <strong>Borders:</strong> {borders ? borders.join(", ") : "N/A"}
+              <strong>Borders:</strong>{" "}
+              {borders && borders.length > 0
+                ? borders.map((borderCode, index) => (
+                    <span key={borderCode}>
+                      <Link
+                        to={`/country/${borderCode}`}
+                        className="border-link"
+                      >
+                        {borderCode}
+                      </Link>
+                      {index < borders.length - 1 && ", "}
+                    </span>
+                  ))
+                : "N/A"}
             </p>
             <a
               href={maps.googleMaps}

@@ -2,7 +2,7 @@
 import React from "react";
 import "../styles/CountryCard.css";
 
-const CountryCard = ({ country, viewMode }) => {
+const CountryCard = ({ country }) => {
   const { name, capital, currencies, flags } = country;
 
   // Get currency details
@@ -20,9 +20,11 @@ const CountryCard = ({ country, viewMode }) => {
       <div className="country-card-details">
         <h2 className="country-card-name">{name.common}</h2>
         <p className="country-card-capital">
-          Capital: {capital ? capital[0] : "N/A"}
+          <strong>Capital:</strong> {capital ? capital[0] : "N/A"}
         </p>
-        <p className="country-card-currency">Currency: {currencyNames}</p>
+        <p className="country-card-currency">
+          <strong>Currency:</strong> {currencyNames}
+        </p>
       </div>
     </div>
   );

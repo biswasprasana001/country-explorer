@@ -46,9 +46,12 @@
 
 .country-info-container {
   border: 2px solid green;
+  border-radius: 10px;
   margin: auto;
   margin-top: 20px;
-  width: 50%;
+  max-width: 1000px;
+  background-color: #fff;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
 }
 
 .country-name {
@@ -98,6 +101,14 @@
   padding: 10px;
 }
 
+.border-link {
+  text-decoration: none;
+  color:#233142;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .map-link {
   border: 2px solid red;
   display: block;
@@ -116,5 +127,25 @@
   }
   &:active {
     background-color: #f95959;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .country-detail {
+    padding: 10px;
+  }
+
+  .country-info {
+    flex-direction: column;
+  }
+
+  .country-flag-container {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .country-details {
+    width: 100%;
+    margin-left: 0;
   }
 }
