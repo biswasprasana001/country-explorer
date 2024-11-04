@@ -7,7 +7,7 @@ import React, {
   useMemo,
 } from "react";
 import { Link } from "react-router-dom";
-import { ClipLoader } from "react-spinners"; // Import the spinner
+import { ClipLoader } from "react-spinners";
 import CountryCard from "./CountryCard";
 import "../styles/CountryList.css";
 

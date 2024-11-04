@@ -1,42 +1,39 @@
-.first-color {
-  background: #233142;
-}
-
-.second-color {
-  background: #455d7a;
-}
-
-.third-color {
-  background: #f95959;
-}
-
-.fourth-color {
-  background: #e3e3e3;
-}
-
 a {
   text-decoration: none;
 }
 
 .country-card {
   background-color: #fff;
-  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1)
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+  
+  &:active {
+    background-color: #e3e3e3
+  }
+}
+
+.loaded {
+  opacity: 1;
+  transform: translateY(0); 
 }
 
 .list {
-  border: 2px solid red;
-
   .country-container {
-    border: 2px solid red;
     max-width: 750px;
     margin: auto;
     margin-bottom: 10px;
   }
 
   .country-card {
-    border: 2px solid blue;
     padding: 10px;
     margin: 10px;
+    border: 2px dashed #455d7a;
     border-radius: 5px;
     text-align: center;
     margin: auto;
@@ -50,25 +47,21 @@ a {
   }
 
   .country-card-flag {
-    border: 2px solid green;
     width: 50%;
     height: auto;
     display: flex;
     justify-content: center;
+    padding: 5px;
   }
 
   .country-card-flag img {
-    border: 2px solid blue;
     width: 100%;
   }
 
   .country-card-details {
-    border: 2px solid red;
     width: 55%;
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
-    /* align-items: center; */
   }
 
   .country-card-name,
@@ -78,10 +71,10 @@ a {
     margin-left: 20px;
     padding: 7.5px;
     text-align: left;
+    border: 1px dashed #455d7a;
   }
 
   .country-card-name {
-    border: 2px solid red;
     font-family: "Courier New", Courier, monospace;
     font-weight: bold;
     font-size: 1.5rem;
@@ -89,13 +82,11 @@ a {
   }
 
   .country-card-capital {
-    border: 2px solid red;
     font-family: "Courier New", Courier, monospace;
     color: #233142;
   }
 
   .country-card-currency {
-    border: 2px solid red;
     font-family: "Courier New", Courier, monospace;
     color: #233142;
   }
@@ -108,20 +99,16 @@ a {
 }
 
 .grid {
-  border: 2px solid red;
-
   .country-container {
-    border: 2px solid red;
     width: 75%;
     margin: auto;
     margin-bottom: 10px;
-    /* height: 325px; */
   }
 
   .country-card {
-    border: 2px solid blue;
     padding: 10px;
     margin: 10px;
+    border: 2px dashed #455d7a;
     border-radius: 5px;
     text-align: center;
     margin: auto;
@@ -135,7 +122,6 @@ a {
   }
 
   .country-card-flag {
-    border: 2px solid green;
     width: 100%;
     height: 150px;
     display: flex;
@@ -143,18 +129,21 @@ a {
   }
 
   .country-card-flag img {
-    border: 2px solid blue;
-    /* width: 100%; */
     height: auto;
   }
 
   .country-card-details {
-    border: 2px solid red;
     margin-top: 20px;
   }
 
+  .country-card-name, 
+  .country-card-capital,
+  .country-card-currency {
+    border: 1px dashed #455d7a;
+    padding: 7.5px;
+  }
+
   .country-card-name {
-    border: 2px solid red;
     font-family: "Courier New", Courier, monospace;
     font-weight: bold;
     font-size: 1.5rem;
@@ -162,13 +151,11 @@ a {
   }
 
   .country-card-capital {
-    border: 2px solid red;
     font-family: "Courier New", Courier, monospace;
     color: #233142;
   }
 
   .country-card-currency {
-    border: 2px solid red;
     font-family: "Courier New", Courier, monospace;
     color: #233142;
   }

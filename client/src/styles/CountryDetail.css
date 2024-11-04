@@ -1,34 +1,16 @@
-.first-color {
-  background: #233142;
-}
-
-.second-color {
-  background: #455d7a;
-}
-
-.third-color {
-  background: #f95959;
-}
-
-.fourth-color {
-  background: #e3e3e3;
-}
-
 .country-detail {
-  border: 2px solid red;
   height: 100vh;
+  padding: 20px;
 }
 
 .back-link {
-  border: 2px solid red;
   text-decoration: none;
 }
 
 .back-link-btn {
-  border: 2px solid blue;
+  border: none;
   display: block;
   margin: auto;
-  margin-top: 10px;
   text-align: center;
   padding: 10px 20px;
   border-radius: 5px;
@@ -45,26 +27,26 @@
 }
 
 .country-info-container {
-  border: 2px solid green;
+  border: 2px dashed #455d7a;
   border-radius: 10px;
   margin: auto;
   margin-top: 20px;
   max-width: 1000px;
   background-color: #fff;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 }
 
 .country-name {
-  border: 2px solid blue;
   text-align: center;
   font-size: 32px;
   font-weight: bold;
-  margin-bottom: 10px;
+  padding: 10px;
   color: #455d7a;
+  border: 2px dashed #455d7a;
 }
 
 .country-info {
-  border: 2px solid green;
   display: flex;
   padding: 10px;
   align-items: center;
@@ -72,26 +54,16 @@
 }
 
 .country-flag-container {
-  border: 2px solid blue;
   width: 50%;
 }
 
 .country-flag {
-  border: 2px solid green;
   width: 100%;
   height: auto;
 }
 
-.country-coat-of-arms-container {
-  border: 2px solid blue;
-}
-
-.country-coat-of-arms {
-  border: 2px solid green;
-}
-
 .country-details {
-  border: 2px solid blue;
+  border: 2px dashed #455d7a;
   margin-left: 20px;
   width: 25%;
   font-size: 20px;
@@ -103,14 +75,14 @@
 
 .border-link {
   text-decoration: none;
-  color:#233142;
+  color: #233142;
   &:hover {
     text-decoration: underline;
   }
 }
 
 .map-link {
-  border: 2px solid red;
+  border: none;
   display: block;
   margin: auto;
   margin-top: 20px;
@@ -124,6 +96,8 @@
   transition: background-color 0.3s ease;
   &:hover {
     background-color: #f00000;
+    transform: scale(1.05);
+    transition: transform 0.5s ease;
   }
   &:active {
     background-color: #f95959;

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import "../styles/CountryDetail.css";
-import { ClipLoader } from "react-spinners"; // Optional: for loading spinner
+import { ClipLoader } from "react-spinners";
 
 const CountryDetail = () => {
   const { countryCode } = useParams();
@@ -31,7 +31,7 @@ const CountryDetail = () => {
   if (isLoading || !country) {
     return (
       <div className="loading-spinner">
-        <ClipLoader color="#007bff" size={50} /> {/* Optional spinner */}
+        <ClipLoader color="#007bff" size={50} />
       </div>
     );
   }

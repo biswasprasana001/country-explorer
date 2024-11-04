@@ -1,11 +1,17 @@
 // client\src\components\CountryCard.js
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/CountryCard.css";
 
 const CountryCard = ({ country }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
   const { name, capital, currencies, flags } = country;
 
-  // Get currency details
+  useEffect(() => {
+    // a short delay to ensure animation runs only after component has mounted
+    const timer = setTimeout(() => setIsLoaded(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   const currencyNames = currencies
     ? Object.values(currencies)
         .map((currency) => currency.name)
@@ -13,7 +19,7 @@ const CountryCard = ({ country }) => {
     : "N/A";
 
   return (
-    <div className="country-card">
+    <div className={`country-card ${isLoaded ? "loaded" : ""}`}>
       <div className="country-card-flag">
         <img src={flags.svg} alt={`${name.common} flag`} />
       </div>
